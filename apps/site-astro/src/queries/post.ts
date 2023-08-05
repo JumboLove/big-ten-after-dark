@@ -82,6 +82,7 @@ export async function getPost(slug: string) {
     throw new Error(`Error in getPost: No slug provided`);
   }
   const query = groq`*[_type == "post" && slug.current == $slug && language == $lang][0] {
+    _createdAt,
     title,
     slug,
     description,
@@ -94,6 +95,7 @@ export async function getPost(slug: string) {
   });
 
   const PostResult = MergedPost.pick({
+    _createdAt: true,
     title: true,
     slug: true,
     description: true,

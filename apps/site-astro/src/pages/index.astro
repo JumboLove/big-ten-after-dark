@@ -1,27 +1,28 @@
 ---
-import Layout from "../layouts/Layout.astro";
 import PortableText from "@/components/PortableText/PortableText.astro";
+import { formatDateOnly } from "@/lib/utils";
+import { getPost } from "@/queries/post";
+import Layout from "../layouts/Layout.astro";
 
-/**
- * Mocking a Sanity query that returns Portable Text
- * @see https://spacemadness.dev/docs/render-portable-text/
- */
-import testPortableTextData from "@/data/test-portable-text.json";
-const { body } = testPortableTextData;
+const firstPost = await getPost("our-messy-completely-foreseeable-birthday");
+const { body, title, _createdAt } = firstPost;
 ---
 
 <Layout>
-  <main>
-    <div class="prose-width content-container">
-      <h1 class="h1">Welcome to Space Madness</h1>
-      <p class="p">
-        Check out <a href="https://spacemadness.dev/docs/">the docs</a> for
-        details on how to get started.
-      </p>
-      <hr class="my-10" />
-      <div class="prose mt-6">
-        <PortableText value={body} />
-      </div>
-    </div>
+  <main class="mt-10">
+    <article class="prose-custom content-container">
+      <h1>{title}</h1>
+      {
+        _createdAt && (
+          <time
+            datetime={_createdAt?.toISOString()}
+            class="text-foreground/80 text-md"
+          >
+            {formatDateOnly(_createdAt)}
+          </time>
+        )
+      }
+      <PortableText value={body} />
+    </article>
   </main>
 </Layout>

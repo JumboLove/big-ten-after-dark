@@ -7,3 +7,4 @@
 # Turbo cache
 .turbo
 node_modules
+.env

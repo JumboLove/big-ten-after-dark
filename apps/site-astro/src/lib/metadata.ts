@@ -1,10 +1,10 @@
-export const siteTitle = "Space Madness Stack";
-export const siteTagline = "Connected content with ease";
+export const siteTitle = "Big Ten After Dark";
+export const siteTagline = "Three yards and a cloud of forrest fires";
 export const siteDescription =
-  "A content framework that connects ideas so you can build your digital garden ";
+  "Manifest Destiny of the (Second) Best Damn Football Conference in the Land";
 export const hostname =
   process.env.NODE_ENV === "production"
-    ? "https://demo.spacemadness.dev/"
+    ? "https://bigtenafterdark.com/"
     : "https://localhost:3000/";
 
 export function titleTemplate(title?: string, tagline: string = siteTagline) {
