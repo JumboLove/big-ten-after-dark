@@ -1,4 +1,4 @@
-export const siteTitle = "Big Ten After Dark";
+export const siteTitle = "Big 10 After Dark";
 export const siteTagline = "Three yards and a cloud of forrest fires";
 export const siteDescription =
   "Manifest Destiny of the (Second) Best Damn Football Conference in the Land";

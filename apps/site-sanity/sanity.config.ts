@@ -7,7 +7,7 @@ import {documentInternationalization} from '@sanity/document-internationalizatio
 
 export default defineConfig({
   name: 'default',
-  title: 'Big Ten After Dark',
+  title: 'Big 10 After Dark',
   projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
   dataset: 'production',
 

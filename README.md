@@ -1,6 +1,6 @@
-# Big Ten After Dark
+# Big 10 After Dark
 
-## A silly site to celebrate and scorn Big Ten from sea to boiling sea
+## A silly site to celebrate and scorn Big 10 from sea to boiling sea
 
 Very much a site in progress. Built with [Space Madness](https://spacemadness.dev/)
 
