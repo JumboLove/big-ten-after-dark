@@ -1,0 +1,135 @@
+---
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+import MetaTags from "@/components/MetaTags.astro";
+import BacklinksList from "@/components/content/BacklinksList.astro";
+import TagsList from "@/components/content/TagsList.astro";
+import Layout from "@/layouts/Layout.astro";
+import { titleTemplate } from "@/lib/metadata";
+import { splitIntoLines } from "@/lib/stringUtils";
+import { getUrlForSanityType } from "@/lib/url";
+import type { Backlink, ResourceBacklink } from "@/queries/partials/backlink";
+import { getAllResourcesFull } from "@/queries/resource";
+import type { InferGetStaticPropsType } from "astro";
+import type { NestableParentResourceResult } from "@/queries/partials/allParentResources";
+
+export async function getStaticPaths() {
+  const data = await getAllResourcesFull();
+  const staticProps = data.map((resource) => {
+    return {
+      params: {
+        slug: resource.slug.current,
+      },
+      props: {
+        resource: resource,
+      },
+    };
+  });
+
+  return staticProps;
+}
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+const { resource } = Astro.props as Props;
+const descriptionLines = splitIntoLines(resource.description);
+
+// backlinks that are child resources of this resource will be
+// rendered outside of the backlinks component
+const [renderedBacklinks, childResources] = splitBacklinksAndChildResources();
+
+function splitBacklinksAndChildResources(): [Backlink[], ResourceBacklink[]] {
+  const backlinks: Backlink[] = [];
+  const childResources: ResourceBacklink[] = [];
+
+  resource.backlinks?.forEach((backlink) => {
+    if (
+      backlink._type === "resource" &&
+      backlink.parentResource?.slug.current === resource.slug.current
+    ) {
+      childResources.push(backlink);
+    } else {
+      backlinks.push(backlink);
+    }
+  });
+
+  return [backlinks, childResources];
+}
+
+// Render breadcrumbs if this resource is a child of other resources
+const breadcrumbLinks: { url?: string; text: string }[] = [];
+
+if (resource.parentResource) {
+  let currentResource: NestableParentResourceResult = resource;
+  while (currentResource?.parentResource) {
+    currentResource = currentResource.parentResource;
+    if (!currentResource) {
+      break;
+    }
+    breadcrumbLinks.unshift({
+      url: getUrlForSanityType("resource", currentResource.slug.current),
+      text: currentResource.title,
+    });
+  }
+
+  breadcrumbLinks.push({ text: resource.title });
+}
+---
+
+<Layout>
+  <MetaTags
+    title={titleTemplate(resource.title)}
+    description={resource.description}
+    slot="metadata"
+  />
+  <div class="prose-custom content-container">
+    {
+      breadcrumbLinks.length > 0 && (
+        <Breadcrumbs links={breadcrumbLinks} class="" />
+      )
+    }
+    <h1 class="h2">{resource.title}</h1>
+    {resource.tags && <TagsList tags={resource.tags} asLinks={true} />}
+    <p><a href={resource.url}>{resource.url}</a></p>
+
+    {descriptionLines.map((line, i) => <p class="p" set:html={line} />)}
+
+    {
+      childResources && (
+        <div>
+          {childResources.map((childResource) => {
+            const childResourceDescriptionLines = splitIntoLines(
+              childResource.description,
+            );
+            return (
+              <div>
+                <h3>
+                  <a
+                    href={getUrlForSanityType(
+                      childResource._type,
+                      childResource.slug.current,
+                    )}
+                    class="link"
+                  >
+                    {childResource.title}
+                  </a>
+                </h3>
+                {childResourceDescriptionLines.map((line, i) => (
+                  <p class="p" set:html={line} />
+                ))}
+              </div>
+            );
+          })}
+        </div>
+      )
+    }
+  </div>
+
+  {
+    renderedBacklinks && renderedBacklinks.length > 0 && (
+      <aside class="content-container prose-width">
+        <h3 class="h3 my-4">Backlinks</h3>
+        <BacklinksList backlinks={renderedBacklinks} />
+      </aside>
+    )
+  }
+</Layout>

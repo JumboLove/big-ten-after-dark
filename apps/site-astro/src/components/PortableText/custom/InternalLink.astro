@@ -1,0 +1,78 @@
+---
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/content/Popover";
+import { splitIntoLines } from "@/lib/stringUtils";
+import { getUrlForSanityType } from "@/lib/url";
+import type { Props as $, Mark } from "astro-portabletext/types";
+import type { InternalLinkAnnotation } from "content-models";
+import Breadcrumbs from "@/components/Breadcrumbs.astro";
+export type Props = $<Mark<InternalLinkAnnotation>>;
+
+const {
+  node: { markDef },
+} = Astro.props;
+
+function buildLinks(mark: InternalLinkAnnotation) {
+  const links: { url: string; text: string; internal: boolean }[] = [];
+
+  links.push({
+    url: getUrlForSanityType(
+      mark.internalLink._type,
+      mark.internalLink.slug.current,
+    ),
+    text: mark.internalLink.title,
+    internal: true,
+  });
+
+  // If this is a resource that also has a parent resource,
+  // provide links to both pages
+  if (
+    "parentResource" in mark.internalLink &&
+    mark.internalLink.parentResource !== null
+  ) {
+    links.push({
+      url: getUrlForSanityType(
+        mark.internalLink.parentResource._type,
+        mark.internalLink.parentResource.slug.current,
+      ),
+      text: mark.internalLink.parentResource.title,
+      internal: false,
+    });
+  }
+
+  return links;
+}
+
+const [mainLink, ...otherLinks] = buildLinks(markDef);
+const lines = splitIntoLines(markDef.internalLink.description);
+---
+
+{
+  markDef.showPopover && (
+    <Popover>
+      <PopoverTrigger>
+        <slot />
+      </PopoverTrigger>
+
+      <PopoverContent>
+        <div class="flex flex-col justify-between gap-2 leading-snug">
+          {lines.map((line, i) => (
+            <p class="text-md" set:html={line} />
+          ))}
+
+          <Breadcrumbs links={[...otherLinks, mainLink]} class="mt-2" />
+        </div>
+      </PopoverContent>
+    </Popover>
+  )
+}
+{
+  !markDef.showPopover && (
+    <a href={mainLink.url} title={mainLink.text}>
+      <slot />
+    </a>
+  )
+}

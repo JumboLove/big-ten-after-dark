@@ -1,0 +1,11 @@
+---
+import type { Props as $ } from "astro-portabletext/types";
+import type { EmbedBlock } from "content-models";
+import { Embed as AstroEmbed } from "sanity-astro-embeds";
+export type Props = $<EmbedBlock>;
+const { node } = Astro.props;
+---
+
+<div class="my-8">
+  <AstroEmbed url={node.url} />
+</div>

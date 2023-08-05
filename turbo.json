@@ -1,0 +1,21 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalEnv": ["SANITY_STUDIO_PROJECT_ID"],
+  "pipeline": {
+    "build": {
+      "outputs": ["dist/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "build:search": {
+      "cache": true
+    },
+    "clean": {
+      "cache": false
+    },
+    "lint": {},
+    "format": {}
+  }
+}
