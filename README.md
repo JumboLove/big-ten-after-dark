@@ -1,12 +1,10 @@
-# Space Madness
+# Big Ten After Dark
 
-## A content framework that connects ideas so you can build your digital garden
+## A silly site to celebrate and scorn Big Ten from sea to boiling sea
 
-[![Deploy to Netlify Button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/JumboLove/space-madness&base=apps/site-astro)
+Very much a site in progress. Built with [Space Madness](https://spacemadness.dev/)
 
-[![Netlify Status](https://api.netlify.com/api/v1/badges/b7b70f89-282d-4a89-97c8-fc97b39565f1/deploy-status)](https://app.netlify.com/sites/space-madness-demo/deploys)
-
-[demo.spacemadness.dev](https://demo.spacemadness.dev/)
+## The nerdy details
 
 A turbo repo that includes everything you need to run your backend in Sanity and your frontend in Astro.
 
