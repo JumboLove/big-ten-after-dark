@@ -5,24 +5,40 @@ import { getPost } from "@/queries/post";
 import Layout from "../layouts/Layout.astro";
 
 const firstPost = await getPost("our-messy-completely-foreseeable-birthday");
-const { body, title, _createdAt } = firstPost;
+const secondPost = await getPost("out-of-the-ashes");
+const { body: body1, title: title1, _createdAt: _createdAt1 } = firstPost;
+const { body: body2, title: title2, _createdAt: _createdAt2 } = secondPost;
 ---
 
 <Layout>
-  <main class="mt-10">
+  <main class="mt-10 py-20">
     <article class="prose-custom content-container">
-      <h1>{title}</h1>
+      <h1>{title2}</h1>
       {
-        _createdAt && (
+        _createdAt2 && (
           <time
-            datetime={_createdAt?.toISOString()}
+            datetime={_createdAt2?.toISOString()}
             class="text-foreground/80 text-md"
           >
-            {formatDateOnly(_createdAt)}
+            {formatDateOnly(_createdAt2)}
           </time>
         )
       }
-      <PortableText value={body} />
+      <PortableText value={body2} />
+    </article>
+    <article class="prose-custom content-container">
+      <h1>{title1}</h1>
+      {
+        _createdAt1 && (
+          <time
+            datetime={_createdAt1?.toISOString()}
+            class="text-foreground/80 text-md"
+          >
+            {formatDateOnly(_createdAt1)}
+          </time>
+        )
+      }
+      <PortableText value={body1} />
     </article>
   </main>
 </Layout>
